@@ -17,6 +17,34 @@ public class ShaderHelper {
         return compileShader(GLES20.GL_FRAGMENT_SHADER, shaderCode);
     }
 
+    public static int linkProgram(int vertexShaderId, int fragShaderId) {
+        final int programObjectId = GLES20.glCreateProgram();
+        if(programObjectId == 0) {
+            if(LoggerConfig.LOG_ON) {
+                Log.w(TAG, "Could not create new program");
+            }
+            return 0;
+        }
+        GLES20.glAttachShader(programObjectId, vertexShaderId);
+        GLES20.glAttachShader(programObjectId, fragShaderId);
+        GLES20.glLinkProgram(programObjectId);
+
+        final int[] linkStatus = new int[1];
+        GLES20.glGetProgramiv(programObjectId, GLES20.GL_LINK_STATUS, linkStatus, 0);
+        if(LoggerConfig.LOG_ON) {
+            Log.d(TAG, "Results of linking program:\n"
+                    + GLES20.glGetProgramInfoLog(programObjectId));
+        }
+        if(linkStatus[0] == 0) {
+            GLES20.glDeleteProgram(programObjectId);
+            if(LoggerConfig.LOG_ON) {
+                Log.w(TAG, "Linking program failed");
+            }
+            return 0;
+        }
+        return programObjectId;
+    }
+
     private static int compileShader(int shaderType, String shaderCode) {
         final int shaderObjId = GLES20.glCreateShader(shaderType);
         if(shaderObjId == 0) {
