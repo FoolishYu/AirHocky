@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
+import com.opengl.android.airhockey.util.LoggerConfig;
 import com.opengl.android.airhockey.util.ShaderHelper;
 import com.opengl.android.airhockey.util.TextResourceReader;
 
@@ -23,6 +24,7 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
     private static final int BYTES_PER_FLOAT = 4;
     private final Context context;
     private final FloatBuffer vertexData;
+    private int program;
     public AirHockeyRenderer(Context context) {
         this.context = context;
         float[] tableVertexWithTriangles = {
@@ -56,7 +58,10 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
                 R.raw.simple_fragment_shader);
         int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
         int fragShader = ShaderHelper.compileFragmentShader(fragShaderSource);
-
+        program = ShaderHelper.linkProgram(vertexShader, fragShader);
+        if(LoggerConfig.LOG_ON) {
+            ShaderHelper.validateProgram(program);
+        }
     }
 
     @Override

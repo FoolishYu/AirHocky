@@ -45,6 +45,16 @@ public class ShaderHelper {
         return programObjectId;
     }
 
+    public static boolean validateProgram(int programObjId) {
+        GLES20.glValidateProgram(programObjId);
+        final int[] validateStatus = new int[1];
+        GLES20.glGetProgramiv(programObjId, GLES20.GL_VALIDATE_STATUS, validateStatus, 0);
+
+        Log.d(TAG, "Results of validating program: " + validateStatus[0] +"\n"
+                    + "Log:" + GLES20.glGetProgramInfoLog(programObjId));
+
+        return validateStatus[0] != 0;
+    }
     private static int compileShader(int shaderType, String shaderCode) {
         final int shaderObjId = GLES20.glCreateShader(shaderType);
         if(shaderObjId == 0) {
