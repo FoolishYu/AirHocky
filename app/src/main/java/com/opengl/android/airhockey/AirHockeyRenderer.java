@@ -21,7 +21,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 public class AirHockeyRenderer implements GLSurfaceView.Renderer {
-    private static final int POSITION_COMPONENT_COUNT = 2;
+    private static final int POSITION_COMPONENT_COUNT = 4;
     private static final int BYTES_PER_FLOAT = 4;
     private static final int COLOR_COMPONENT_COUNT = 3;
     private static final int STRIDE =
@@ -41,22 +41,22 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
     public AirHockeyRenderer(Context context) {
         this.context = context;
         float[] tableVertexWithTriangles = {
-                // Order of coordinates X, Y, R, G, B
+                // Order of coordinates X, Y, Z, W, R, G, B
                 // triangle fan
-                0f,     0f,     1f,   1f,   1f,
-                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
-                0.5f,  -0.8f, 0.7f, 0.7f, 0.7f,
-                0.5f,   0.8f, 0.7f, 0.7f, 0.7f,
-                -0.5f,  0.8f, 0.7f, 0.7f, 0.7f,
-                -0.5f, -0.8f, 0.7f, 0.7f, 0.7f,
+                0f,     0f,   0f, 1.5f,  1f,   1f,   1f,
+                -0.5f, -0.8f, 0f,  1f, 0.7f, 0.7f, 0.7f,
+                0.5f,  -0.8f, 0f,  1f, 0.7f, 0.7f, 0.7f,
+                0.5f,   0.8f, 0f,  2f, 0.7f, 0.7f, 0.7f,
+                -0.5f,  0.8f, 0f,  2f, 0.7f, 0.7f, 0.7f,
+                -0.5f, -0.8f, 0f,  1f, 0.7f, 0.7f, 0.7f,
 
                 // line 1
-                -0.5f,    0f,   1f,   0f,   0f,
-                0.5f,     0f,   1f,   0f,   0f,
+                -0.5f,    0f, 0f,  1.5f, 1f,   0f,   0f,
+                0.5f,     0f, 0f,  1.5f, 1f,   0f,   0f,
 
                 // Mallets
-                0f,  -0.4f,   0f,   0f,   1f,
-                0f,   0.4f,   1f,   0f,   0f
+                0f,  -0.4f,   0f,  1.25f, 0f,   0f,   1f,
+                0f,   0.4f,   0f,  1.75f, 1f,   0f,   0f
         };
         vertexData = ByteBuffer.allocateDirect(tableVertexWithTriangles.length * BYTES_PER_FLOAT)
                 .order(ByteOrder.nativeOrder())
