@@ -40,7 +40,6 @@ public class AirHockeyActivity extends Activity{
         } else {
             Toast.makeText(this, "This device does not support opengl es 2.0", Toast.LENGTH_SHORT).show();
         }
-
         setContentView(glSurfaceView);
     }
 

@@ -34,29 +34,30 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         this.context = context;
         float[] tableVertexWithTriangles = {
                 // triangle 1
-                0f, 0f,
-                9f, 14f,
-                0f, 14f,
+                -0.5f, -0.5f,
+                0.5f, 0.5f,
+                -0.5f, 0.5f,
                 // triangle 2
-                0f, 0f,
-                9f, 0f,
-                9f, 14f,
+                -0.5f, -0.5f,
+                0.5f, -0.5f,
+                0.5f, 0.5f,
 
                 // line 1
-                0f, 7f,
-                9f, 7f,
+                -0.5f, 0f,
+                0.5f, 0f,
 
                 // Mallets
-                4.5f, 2f,
-                4.5f, 12f
+                0f, -0.25f,
+                0f, 0.25f
         };
         vertexData = ByteBuffer.allocateDirect(tableVertexWithTriangles.length * BYTES_PER_FLOAT)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
+        vertexData.put(tableVertexWithTriangles);
     }
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         String vertexShaderSource = TextResourceReader.readTextFileFromResource(context,
                 R.raw.simple_vertex_shader);
         String fragShaderSource = TextResourceReader.readTextFileFromResource(context,
@@ -67,6 +68,7 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
         if(LoggerConfig.LOG_ON) {
             ShaderHelper.validateProgram(program);
         }
+        GLES20.glUseProgram(program);
         uColorLocation = GLES20.glGetUniformLocation(program, U_COLOR);
         aPositionLocation = GLES20.glGetAttribLocation(program, A_POSITION);
         vertexData.position(0);
@@ -81,16 +83,17 @@ public class AirHockeyRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        gl.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        // draw table
         GLES20.glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
-
+        // draw lines
         GLES20.glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
         GLES20.glDrawArrays(GLES20.GL_LINES, 6, 2);
-
+        // draw mallet blue
         GLES20.glUniform4f(uColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 8, 1);
-
+        // draw mallet red
         GLES20.glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 9, 1);
     }
