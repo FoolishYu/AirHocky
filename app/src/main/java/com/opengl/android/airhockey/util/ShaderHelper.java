@@ -55,6 +55,21 @@ public class ShaderHelper {
 
         return validateStatus[0] != 0;
     }
+
+    public static int buildProgram(String vertexShaderSource, String fragShaderSource) {
+        int program;
+        // Compile the shader
+        int vertexShader = compileVertexShader(vertexShaderSource);
+        int fragShader = compileFragmentShader(fragShaderSource);
+
+        // link them into a shader program
+        program = linkProgram(vertexShader, fragShader);
+        if(LoggerConfig.LOG_ON) {
+            validateProgram(program);
+        }
+
+        return program;
+    }
     private static int compileShader(int shaderType, String shaderCode) {
         final int shaderObjId = GLES20.glCreateShader(shaderType);
         if(shaderObjId == 0) {
@@ -78,7 +93,7 @@ public class ShaderHelper {
         }
 
         if(LoggerConfig.LOG_ON) {
-            Log.v(TAG, "Resule of compiling source :" + shaderCode + "\n"
+            Log.v(TAG, "Result of compiling source :" + shaderCode + "\n"
                     +GLES20.glGetShaderInfoLog(shaderObjId));
         }
 
